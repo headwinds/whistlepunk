@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css?family=Kelly+Slab');
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif');
+
+
+
+body {
+    font-family: "Noto Serif", helvetica, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    display: 'block';
+    position: 'relative';
+}
+
+.wrapper {
+  display: 'block';
+  position: 'relative';
+  width: 90%;
+  padding: 0px;
+  margin: 20px;
+}
+
+h1.home {
+  font-family: 'Kelly Slab', cursive;
+  color: #0079e2;
+  font-size: 30px;
+}
+
+h2.home_sub {
+  font-family: 'Kelly Slab', cursive;
+  color: #0079e2;
+  font-size: 20px;
+}
+
+a {
+  color: #0079e2;
+  text-decoration: none;
+}
+
+xmp {
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.retired {
+  color: red
+}
+
+hr.style-six {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  background: #eee;
+  border: none;
+  background-color: #0079e2;
+  color: white;
+  font-size: 14px;
+  outline: 'none';
+}
+
+button:focus {outline:0 !important;}

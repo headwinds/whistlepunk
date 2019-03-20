@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>experiments</title>
+   <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+
+<body>
+  <!-- TODO: replace this with something that matches your app style -->
+<div class="wrapper">
+  <h1 class='home'>Lesson 2: Create, Update, Delete, Aggregrate</h1>
+  <p>...</p>
+  <div>
+    <h2 class='home_sub'>Map</h2>
+    <div id="lego-box">
+      <img src="/imgs/civilians.jpg" width="300px" />
+    </div>
+    <div>
+    ...
+    </div>
+
+    <div>
+      <h2 class='home_sub'>Clojure</h2>
+      <xmp>
+(defn map-scientists-to-agency
+  "returns a list of scientists adding their agency"
+  [agency-name]
+  (let [scientists-with-agency
+    (map (fn [value] {:name (value :name) :profession (value :profession) :agency agency-name})
+      scientists)]
+  {:status 200
+   :body scientists-with-agency}))
+      </xmp>
+    </div>
+    <div id="map-results"></div>
+    <div>
+      <button id="btn" onclick="mapScientists()">map scientists</button>
+    </div>
+  </div>
+
+  <hr />
+
+</div>
+  <script>
+
+  //- GET scientists ------------------------------
+
+  const getColonists = () => {
+    fetch('/get-colonists')
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(scientists) {
+        updateDomWithResults(scientists, "map-results")
+      });
+  }
+
+  getColonists();
+
+  //- MAP ------------------------------
+
+  const updateDomWithResults = (response, elId) => {
+    const mapResults = document.getElementById(elId);
+
+    let results = "<ul>";
+    response.map(colonist => {
+      const li = `<li>${colonist.colonist_name}</li>`;
+      results += li;
+      })
+    results += "</ul>";
+
+    mapResults.innerHTML = results;
+  }
+
+  const mapScientists = () => {
+
+    const data = {name: "NASA"};
+
+    const config = {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, same-origin, *omit
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+    }
+
+    fetch('/map-scientists-to-agency', config)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(scientistsWithAgencies) {
+        console.log("map response: " , scientistsWithAgencies);
+        updateDomWithResults(scientistsWithAgencies, "map-results")
+      });
+  }
+
+  //- FILTER ------------------------------
+
+  const filterScientists = () => {
+
+    const data = {profession: "astRoNauNt"};
+
+    const config = {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, same-origin, *omit
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+    }
+
+    fetch('/filter-scientists-by-profession', config)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(scientistsFilteredByProfession) {
+        console.log("filter response: " , scientistsFilteredByProfession);
+        updateDomWithResults(scientistsFilteredByProfession, "filter-results")
+      });
+  }
+
+  //- FIND ------------------------------
+
+  const findScientist = () => {
+
+    const data = {profession: "Computer Scientist", specialty: "Data Visualization"};
+
+    const config = {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, same-origin, *omit
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+    }
+
+    fetch('/find-scientist', config)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(foundScientist) {
+        console.log("find response: " , foundScientist);
+        foundScientist["agency"] = "NASA";
+        updateDomWithResults([foundScientist], "find-results")
+        document.getElementById("rachael").style.display = "flex"
+      });
+  }
+
+  //- FILTER BUILD FLET -------------------
+
+  const getFleet = () => {
+    fetch('/get-fleet')
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(fleet) {
+
+        let displayScientistsInShipA = fleet[0]["crew"]
+        let displayScientistsInShipB = fleet[1]["crew"]
+
+        updateDomWithResults(displayScientistsInShipA, "fleet-1-results")
+        updateDomWithResults(displayScientistsInShipB, "fleet-2-results")
+      });
+  }
+
+  //- REDUCE ------------------------------
+
+  const updateDomWithReducedResults = (response, elId) => {
+    const mapResults = document.getElementById(elId);
+
+    let results = "<ul>";
+    results += `<li>gold: ${response.gold}</li>`;
+    results += `<li>plutonium: ${response.plutonium}</li>`;
+    results += `<li>emeralds: ${response.emerald}</li>`;
+    results += `<li>trash: ${response.trash}</li>`;
+    results += `<li>rocks: ${response.rock}</li>`;
+    results += "</ul>";
+
+    mapResults.innerHTML = results;
+  }
+
+  const reduceMinerals = () => {
+    fetch('/reduce-minerals')
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(reduceMinerals) {
+        updateDomWithReducedResults(reduceMinerals, 'reduce-results')
+      });
+  }
+
+
+
+  </script>
+</body>
+</html>
